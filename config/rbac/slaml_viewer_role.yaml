@@ -1,0 +1,27 @@
+# permissions for end users to view slamls.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: slaml-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: sla-operator
+    app.kubernetes.io/part-of: sla-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: slaml-viewer-role
+rules:
+- apiGroups:
+  - sla-operator.dcn.com
+  resources:
+  - slamls
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - sla-operator.dcn.com
+  resources:
+  - slamls/status
+  verbs:
+  - get

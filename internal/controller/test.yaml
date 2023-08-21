@@ -1,0 +1,29 @@
+apiVersion: sla-operator.dcn.com/v1alpha1
+kind: Slaml
+metadata:
+  name: slaml-sample-1
+spec:
+  clientId: "POD-OWNER"
+  containerImage: "rest"
+  containerTag: "0.0.5"
+  containerEntrypoint: "/multi-tenant-app"
+---
+apiVersion: sla-operator.dcn.com/v1alpha1
+kind: Slaml
+metadata:
+  name: slaml-sample-2
+spec:
+  clientId: "POD-OWNER"
+  containerImage: "rest"
+  containerTag: "0.0.4"
+  containerEntrypoint: "/multi-tenant-app"
+---
+apiVersion: sla-operator.dcn.com/v1alpha1
+kind: Slaml
+metadata:
+  name: slaml-sample-3
+spec:
+  clientId: "X1-12340"
+  containerImage: "rest"
+  containerTag: "0.0.4"
+  containerEntrypoint: "/multi-tenant-app"

@@ -1,0 +1,12 @@
+apiVersion: sla-operator.dcn.com/v1alpha1
+kind: Slaml
+metadata:
+  labels:
+    app.kubernetes.io/name: slaml
+    app.kubernetes.io/instance: slaml-sample
+    app.kubernetes.io/part-of: sla-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: sla-operator
+  name: slaml-sample
+spec:
+  # TODO(user): Add fields here

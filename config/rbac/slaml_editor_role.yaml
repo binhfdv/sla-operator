@@ -1,0 +1,31 @@
+# permissions for end users to edit slamls.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: slaml-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: sla-operator
+    app.kubernetes.io/part-of: sla-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: slaml-editor-role
+rules:
+- apiGroups:
+  - sla-operator.dcn.com
+  resources:
+  - slamls
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sla-operator.dcn.com
+  resources:
+  - slamls/status
+  verbs:
+  - get
