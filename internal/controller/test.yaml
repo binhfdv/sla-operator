@@ -1,7 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: machine
+---
 apiVersion: sla-operator.dcn.com/v1alpha1
 kind: Slaml
 metadata:
   name: slaml-sample-1
+  namespace: machine
 spec:
   clientId: "POD-OWNER"
   containerImage: "rest"
@@ -12,6 +18,7 @@ apiVersion: sla-operator.dcn.com/v1alpha1
 kind: Slaml
 metadata:
   name: slaml-sample-2
+  namespace: machine
 spec:
   clientId: "POD-OWNER"
   containerImage: "rest"
@@ -22,8 +29,20 @@ apiVersion: sla-operator.dcn.com/v1alpha1
 kind: Slaml
 metadata:
   name: slaml-sample-3
+  namespace: machine
 spec:
   clientId: "X1-12340"
   containerImage: "rest"
   containerTag: "0.0.4"
+  containerEntrypoint: "/multi-tenant-app"
+---
+apiVersion: sla-operator.dcn.com/v1alpha1
+kind: Slaml
+metadata:
+  name: slaml-sample-4
+  namespace: machine
+spec:
+  clientId: "X1-12340"
+  containerImage: "fastapi-docker"
+  containerTag: "latest"
   containerEntrypoint: "/multi-tenant-app"

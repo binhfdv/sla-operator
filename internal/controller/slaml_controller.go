@@ -83,8 +83,8 @@ func (r *SlamlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 
 	case slaoperatorv1alpha1.StatusRunning:
 		pod := resources.CreatePod(clientResource)
-
 		query := &corev1.Pod{}
+		// log.Info("pod infor, DEBUG", query.Spec.Containers)
 		err := r.Client.Get(ctx, client.ObjectKey{Namespace: pod.Namespace, Name: pod.ObjectMeta.Name}, query)
 		if err != nil && errors.IsNotFound(err) {
 			if clientResource.Status.LastPodName == "" {

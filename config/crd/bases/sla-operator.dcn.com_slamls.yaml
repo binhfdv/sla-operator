@@ -36,14 +36,36 @@ spec:
             properties:
               clientId:
                 description: Foo is an example field of Slaml. Edit slaml_types.go
-                  to remove/update Foo string `json:"foo,omitempty"`
+                  to remove/update Foo                 string `json:"foo,omitempty"`
                 type: string
-              containerEntrypoint:
+              isSla:
+                type: boolean
+              name:
                 type: string
-              containerImage:
+              tasks:
+                items:
+                  properties:
+                    containerImage:
+                      type: string
+                    containerRegistry:
+                      type: string
+                    containerReplicas:
+                      format: int32
+                      type: integer
+                    containerTag:
+                      type: string
+                    cpu:
+                      type: string
+                    memory:
+                      type: string
+                    taskName:
+                      type: string
+                  type: object
+                type: array
+              volcanoKind:
                 type: string
-              containerTag:
-                type: string
+            required:
+            - tasks
             type: object
           status:
             description: SlamlStatus defines the observed state of Slaml

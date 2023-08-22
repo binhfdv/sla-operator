@@ -29,17 +29,30 @@ const (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+type Task struct {
+	Cpu               string `json:"cpu,omitempty"`
+	Memory            string `json:"memory,omitempty"`
+	TaskName          string `json:"taskName,omitempty"`
+	ContainerReplicas int32  `json:"containerReplicas,omitempty"`
+	ContainerRegistry string `json:"containerRegistry,omitempty"`
+	ContainerImage    string `json:"containerImage,omitempty"`
+	ContainerTag      string `json:"containerTag,omitempty"`
+	// ContainerEntrypoint string `json:"containerEntrypoint,omitempty"`
+}
+
 // SlamlSpec defines the desired state of Slaml
 type SlamlSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of Slaml. Edit slaml_types.go to remove/update
-	// Foo string `json:"foo,omitempty"`
-	ClientId            string `json:"clientId,omitempty"`
-	ContainerImage      string `json:"containerImage,omitempty"`
-	ContainerTag        string `json:"containerTag,omitempty"`
-	ContainerEntrypoint string `json:"containerEntrypoint,omitempty"`
+	// Foo                 string `json:"foo,omitempty"`
+	ClientId string `json:"clientId,omitempty"`
+
+	Name        string `json:"name,omitempty"`
+	IsSla       bool   `json:"isSla,omitempty"`
+	VolcanoKind string `json:"volcanoKind,omitempty"`
+	Tasks       []Task `json:"tasks"`
 }
 
 // SlamlStatus defines the observed state of Slaml
