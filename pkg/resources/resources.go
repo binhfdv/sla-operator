@@ -2,7 +2,7 @@ package resources
 
 import (
 	// "strings"
-
+	"fmt"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -57,7 +57,7 @@ func getTask(clientResource *slaoperatorv1alpha1.Slaml) []v1alpha1.TaskSpec {
 				},
 			},
 		}
-		tasks := append(tasks, temp)
+		tasks = append(tasks, temp)
 	}
 	return tasks
 }
@@ -75,6 +75,7 @@ func getTask(clientResource *slaoperatorv1alpha1.Slaml) []v1alpha1.TaskSpec {
 // }
 
 func CreateJobPod(clientResource *slaoperatorv1alpha1.Slaml) *v1alpha1.Job {
+	fmt.Println(getTask(clientResource))
 	return &v1alpha1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        clientResource.Spec.Name,
@@ -86,9 +87,7 @@ func CreateJobPod(clientResource *slaoperatorv1alpha1.Slaml) *v1alpha1.Job {
 			SchedulerName: "volcano",
 			MinAvailable:  1,
 			Plugins:       getFlugins(clientResource),
-			Tasks: []v1alpha1.TaskSpec{
-				getTask(clientResource),
-			},
+			Tasks:         getTask(clientResource),
 		},
 	}
 }

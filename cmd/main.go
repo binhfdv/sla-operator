@@ -31,6 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
+	v1alpha1 "volcano.sh/apis/pkg/apis/batch/v1alpha1"
+
 	slaoperatorv1alpha1 "github.com/binhfdv/sla-operator/api/v1alpha1"
 	"github.com/binhfdv/sla-operator/internal/controller"
 	//+kubebuilder:scaffold:imports
@@ -46,6 +48,8 @@ func init() {
 
 	utilruntime.Must(slaoperatorv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
+
+	utilruntime.Must(v1alpha1.AddToScheme(scheme))
 }
 
 func main() {

@@ -6,43 +6,29 @@ metadata:
 apiVersion: sla-operator.dcn.com/v1alpha1
 kind: Slaml
 metadata:
-  name: slaml-sample-1
+  name: slaml-sample
   namespace: machine
 spec:
-  clientId: "POD-OWNER"
-  containerImage: "rest"
-  containerTag: "0.0.5"
-  containerEntrypoint: "/multi-tenant-app"
----
-apiVersion: sla-operator.dcn.com/v1alpha1
-kind: Slaml
-metadata:
-  name: slaml-sample-2
-  namespace: machine
-spec:
-  clientId: "POD-OWNER"
-  containerImage: "rest"
-  containerTag: "0.0.4"
-  containerEntrypoint: "/multi-tenant-app"
----
-apiVersion: sla-operator.dcn.com/v1alpha1
-kind: Slaml
-metadata:
-  name: slaml-sample-3
-  namespace: machine
-spec:
-  clientId: "X1-12340"
-  containerImage: "rest"
-  containerTag: "0.0.4"
-  containerEntrypoint: "/multi-tenant-app"
----
-apiVersion: sla-operator.dcn.com/v1alpha1
-kind: Slaml
-metadata:
-  name: slaml-sample-4
-  namespace: machine
-spec:
-  clientId: "X1-12340"
-  containerImage: "fastapi-docker"
-  containerTag: "latest"
-  containerEntrypoint: "/multi-tenant-app"
+  isSla: true
+  name: pytorch-job
+  tasks: [
+      {
+        taskName: "master",
+        containerImage: "fastapi-docker",
+        containerRegistry: "ddocker122",
+        containerTag: "latest",
+        containerReplicas: 1,
+        cpu: "2m",
+        memory: "3Mi"
+      },
+      {
+        taskName: "worker",
+        containerImage: "fastapi-docker",
+        containerRegistry: "ddocker122",
+        containerTag: "latest",
+        containerReplicas: 2,
+        cpu: "2m",
+        memory: "2Mi"
+      }
+      
+    ]
