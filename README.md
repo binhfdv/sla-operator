@@ -28,10 +28,12 @@ source ~/.profile
 ```
 
 # 2. Install Volcano
+
+```
 kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/master/installer/volcano-development.yaml
 
 version: 1.8.0
-
+```
 
 # Semantic commit
 ```
@@ -45,4 +47,4 @@ version: 1.8.0
 ```
 
 # References
-- [Semantic Commit Messages]: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
+- [Semantic Commit Messages](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
