@@ -1,4 +1,7 @@
 # sla_operator
+
+kubernetes v1.23.6
+
 # 1. Install kubebuilder
 ## golang
 curl -OL https://golang.org/dl/go1.20.7.linux-amd64.tar.gz

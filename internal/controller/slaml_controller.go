@@ -19,6 +19,7 @@ package controller
 import (
 	"context"
 	// "reflect"
+	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -27,6 +28,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+
+	v1alpha1 "volcano.sh/apis/pkg/apis/batch/v1alpha1"
 
 	slaoperatorv1alpha1 "github.com/binhfdv/sla-operator/api/v1alpha1"
 	"github.com/binhfdv/sla-operator/pkg/resources"
@@ -52,6 +55,9 @@ type SlamlReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.15.0/pkg/reconcile
+
+// Reference: https://book.kubebuilder.io/cronjob-tutorial/controller-implementation
+
 func (r *SlamlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 
 	log := log.FromContext(ctx)
@@ -59,10 +65,84 @@ func (r *SlamlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	// TODO(user): your logic here
 	var clientResource = &slaoperatorv1alpha1.Slaml{}
 
+	// 1: Load the slaml jobs by name
 	if err := r.Get(ctx, req.NamespacedName, clientResource); err != nil {
 		log.Error(err, "unable to fetch client")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+
+	// 2: List all active jobs, and update the status
+	var childClientResource v1alpha1.JobList
+	if err := r.List(ctx, &childClientResource, client.InNamespace(req.Namespace), client.MatchingFields{jobOwnerKey: req.Name}); err != nil {
+		log.Error(err, "unable to list child Jobs")
+		return ctrl.Result{}, err
+	}
+
+	// find the active list of jobs
+	var pendingJobs []*v1alpha1.Job
+	var runningJobs []*v1alpha1.Job
+	var successfulJobs []*v1alpha1.Job
+	var failedJobs []*v1alpha1.Job
+	// var mostRecentTime *time.Time // find the last run so we can update the status
+	// isJobFinished
+	isJobFinished := func(job *v1alpha1.Job) (bool, v1alpha1.JobPhase) {
+		for _, c := range job.Status.Conditions {
+			if c.Status == v1alpha1.Completed {
+				return true, c.Status
+			} else if c.Status == v1alpha1.Pending || c.Status == v1alpha1.Running {
+				return false, c.Status
+			}
+		}
+
+		return false, ""
+	}
+	// getScheduledTimeForJob
+
+	for i, job := range childClientResource.Items {
+		_, finishedType := isJobFinished(&job)
+		switch finishedType {
+		case "": // ongoing
+			failedJobs = append(failedJobs, &childClientResource.Items[i])
+		case v1alpha1.Pending:
+			pendingJobs = append(pendingJobs, &childClientResource.Items[i])
+		case v1alpha1.Running:
+			runningJobs = append(runningJobs, &childClientResource.Items[i])
+		case v1alpha1.Completed:
+			successfulJobs = append(successfulJobs, &childClientResource.Items[i])
+		}
+
+		// We'll store the launch time in an annotation, so we'll reconstitute that from
+		// the active jobs themselves.
+		// scheduledTimeForJob, err := getScheduledTimeForJob(&job)
+		// if err != nil {
+		// 	log.Error(err, "unable to parse schedule time for child job", "job", &job)
+		// 	continue
+		// }
+		// if scheduledTimeForJob != nil {
+		// 	if mostRecentTime == nil {
+		// 		mostRecentTime = scheduledTimeForJob
+		// 	} else if mostRecentTime.Before(*scheduledTimeForJob) {
+		// 		mostRecentTime = scheduledTimeForJob
+		// 	}
+		// }
+	}
+
+	log.V(1).Info("job count", "running jobs", len(runningJobs), "pending jobs", len(pendingJobs), "successful jobs", len(successfulJobs), "failed jobs", len(failedJobs))
+
+	// if mostRecentTime != nil {
+	// 	cronJob.Status.LastScheduleTime = &metav1.Time{Time: *mostRecentTime}
+	// } else {
+	// 	cronJob.Status.LastScheduleTime = nil
+	// }
+	// cronJob.Status.Active = nil
+	// for _, activeJob := range activeJobs {
+	// 	jobRef, err := ref.GetReference(r.Scheme, activeJob)
+	// 	if err != nil {
+	// 		log.Error(err, "unable to make reference to active job", "job", activeJob)
+	// 		continue
+	// 	}
+	// 	cronJob.Status.Active = append(cronJob.Status.Active, *jobRef)
+	// }
 
 	// clientResourceOld := clientResource.DeepCopy()
 
@@ -85,6 +165,7 @@ func (r *SlamlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 
 	case slaoperatorv1alpha1.StatusRunning:
 		pod := resources.CreateJobPod(clientResource)
+		startPoint := time.Now()
 		query := &corev1.Pod{}
 		// fmt.Println("pod: \n\n", pod)
 		log.Info("HERE 1\n")
@@ -104,7 +185,7 @@ func (r *SlamlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 				}
 
 				log.Info("pod created successfully", "name", pod.Name)
-
+				log.Info("response time: ", time.Since(startPoint))
 				return ctrl.Result{}, nil
 			} else {
 				clientResource.Status.ClientStatus = slaoperatorv1alpha1.StatusCleaning
