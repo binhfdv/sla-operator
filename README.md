@@ -1,4 +1,4 @@
-# sla_operator
+# deadline-aware-job-scheduling-operator
 
 kubernetes v1.23.6
 
