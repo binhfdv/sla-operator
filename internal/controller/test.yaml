@@ -9,7 +9,7 @@ metadata:
   name: slaml-sample
   namespace: machine
 spec:
-  isSla: true
+  slaTarget: 50
   name: pytorch-job
   tasks: [
       {
@@ -26,7 +26,7 @@ spec:
         containerImage: "fastapi-docker",
         containerRegistry: "ddocker122",
         containerTag: "latest",
-        containerReplicas: 2,
+        containerReplicas: 5,
         cpu: "2m",
         memory: "2Mi"
       }

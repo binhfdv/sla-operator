@@ -3,16 +3,26 @@
 kubernetes v1.23.6
 
 # 1. Install kubebuilder
-## golang
+## golang 1.20.7
+
+```
+# remove go
+sudo rm -rf /usr/local/go
+dpkg -l | grep golang
+sudo apt-get remove golang*
+```
+
 ```
 curl -OL https://golang.org/dl/go1.20.7.linux-amd64.tar.gz
 
 sudo tar -C /usr/local -xvf go1.20.7.linux-amd64.tar.gz
 
-add to ~/.profile: export PATH=$PATH:/usr/local/go/bin
+# add to ~/.profile:
+export PATH=$PATH:/usr/local/go/bin
+go version
 ```
 
-## download kubebuilder and install locally.
+## Download kubebuilder and install locally.
 ```
 curl -L -o kubebuilder "https://go.kubebuilder.io/dl/v3.11.1/$(go env GOOS)/$(go env GOARCH)"
 
@@ -27,12 +37,41 @@ add this to ~/.profile: export PATH=$PATH:/usr/local/kubebuilder/bin
 source ~/.profile
 ```
 
-# 2. Install Volcano
+# 2. Install Volcano v1.8.0
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/master/installer/volcano-development.yaml
+kubectl create namespace volcano-system
+kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/v1.8.0/installer/volcano-development.yaml
+```
 
-version: 1.8.0
+# 3. Install helm-chart and prometheus, grfana
+
+```
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+```
+
+```
+cd installation/prometheus-chart
+helm install kube-prometheus-stack kube-prometheus-stack/
+
+kubectl edit svc kube-prometheus-stack-prometheus
+'change type: ClusterIP -> type: NodePort'
+
+kubectl edit svc kube-prometheus-stack-grafana
+'change type: ClusterIP -> type: NodePort'
+
+# grafana account:
+user: admin
+password: prom-operator
+```
+
+```
+prometheus/grafana web ui:
+<master ip>:<port>
+# port obtained from
+kubectl get svc -A | grep NodePort
 ```
 
 # Semantic commit

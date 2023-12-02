@@ -38,13 +38,16 @@ spec:
                 description: Foo is an example field of Slaml. Edit slaml_types.go
                   to remove/update Foo                 string `json:"foo,omitempty"`
                 type: string
-              isSla:
-                type: boolean
               name:
                 type: string
+              slaTarget:
+                format: int32
+                type: integer
               tasks:
                 items:
                   properties:
+                    containerEntrypoint:
+                      type: string
                     containerImage:
                       type: string
                     containerRegistry:
@@ -55,6 +58,8 @@ spec:
                     containerTag:
                       type: string
                     cpu:
+                      type: string
+                    gpu:
                       type: string
                     memory:
                       type: string

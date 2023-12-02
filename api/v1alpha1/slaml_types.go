@@ -30,14 +30,15 @@ const (
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 type Task struct {
-	Cpu               string `json:"cpu,omitempty"`
-	Memory            string `json:"memory,omitempty"`
-	TaskName          string `json:"taskName,omitempty"`
-	ContainerReplicas int32  `json:"containerReplicas,omitempty"`
-	ContainerRegistry string `json:"containerRegistry,omitempty"`
-	ContainerImage    string `json:"containerImage,omitempty"`
-	ContainerTag      string `json:"containerTag,omitempty"`
-	// ContainerEntrypoint string `json:"containerEntrypoint,omitempty"`
+	Cpu                 string `json:"cpu,omitempty"`
+	Memory              string `json:"memory,omitempty"`
+	Gpu                 string `json:"gpu,omitempty"`
+	TaskName            string `json:"taskName,omitempty"`
+	ContainerReplicas   int32  `json:"containerReplicas,omitempty"`
+	ContainerRegistry   string `json:"containerRegistry,omitempty"`
+	ContainerImage      string `json:"containerImage,omitempty"`
+	ContainerTag        string `json:"containerTag,omitempty"`
+	ContainerEntrypoint string `json:"containerEntrypoint,omitempty"`
 }
 
 // SlamlSpec defines the desired state of Slaml
@@ -47,10 +48,9 @@ type SlamlSpec struct {
 
 	// Foo is an example field of Slaml. Edit slaml_types.go to remove/update
 	// Foo                 string `json:"foo,omitempty"`
-	ClientId string `json:"clientId,omitempty"`
-
+	ClientId    string `json:"clientId,omitempty"`
 	Name        string `json:"name,omitempty"`
-	IsSla       bool   `json:"isSla,omitempty"`
+	SlaTarget   int32  `json:"slaTarget,omitempty"`
 	VolcanoKind string `json:"volcanoKind,omitempty"`
 	Tasks       []Task `json:"tasks"`
 }
