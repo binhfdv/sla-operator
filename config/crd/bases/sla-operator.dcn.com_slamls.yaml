@@ -34,9 +34,10 @@ spec:
           spec:
             description: SlamlSpec defines the desired state of Slaml
             properties:
-              clientId:
+              IsSla:
                 description: Foo is an example field of Slaml. Edit slaml_types.go
                   to remove/update Foo                 string `json:"foo,omitempty"`
+                  ClientId    string `json:"clientId,omitempty"`
                 type: string
               name:
                 type: string
@@ -46,6 +47,8 @@ spec:
               tasks:
                 items:
                   properties:
+                    Type:
+                      type: string
                     containerEntrypoint:
                       type: string
                     containerImage:

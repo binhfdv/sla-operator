@@ -44,7 +44,7 @@ kubectl create namespace volcano-system
 kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/v1.8.0/installer/volcano-development.yaml
 ```
 
-# 3. Install helm-chart and prometheus, grfana
+# 3. Install helm-chart and prometheus, grafana
 
 ```
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3

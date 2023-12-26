@@ -30,6 +30,7 @@ const (
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 type Task struct {
+	Type                string `json:"Type,omitempty"`
 	Cpu                 string `json:"cpu,omitempty"`
 	Memory              string `json:"memory,omitempty"`
 	Gpu                 string `json:"gpu,omitempty"`
@@ -48,7 +49,8 @@ type SlamlSpec struct {
 
 	// Foo is an example field of Slaml. Edit slaml_types.go to remove/update
 	// Foo                 string `json:"foo,omitempty"`
-	ClientId    string `json:"clientId,omitempty"`
+	// ClientId    string `json:"clientId,omitempty"`
+	IsSla       string `json:"IsSla,omitempty"`
 	Name        string `json:"name,omitempty"`
 	SlaTarget   int32  `json:"slaTarget,omitempty"`
 	VolcanoKind string `json:"volcanoKind,omitempty"`
